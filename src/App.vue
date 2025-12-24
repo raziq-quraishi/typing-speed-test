@@ -1,16 +1,12 @@
-<script setup lang="ts">
+<script setup>
 import Nav from './components/Nav.vue'
+import ActionNav from './components/ActionNav.vue'
 </script>
 
 <template>
-  <div id="app" class="min-h-screen flex flex-col">
+  <div id="app" class="">
     <Nav />
-    <main class="flex-grow container mx-auto px-4 py-6">
-      <RouterView />
-    </main>
-    <footer class="bg-gray-200 text-center py-4">
-      <p>&copy; 2024 My Vue App</p>
-    </footer>
+    <ActionNav />
   </div>
 </template>
 
