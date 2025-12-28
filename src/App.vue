@@ -16,8 +16,6 @@ const selectedLevel = ref('easy')
 
 const handleFromButton = (e) => {
   selectedLevel.value = e
-
-  console.log('e--------from App', e)
 }
 </script>
 <style scoped></style>

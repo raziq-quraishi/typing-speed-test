@@ -10,17 +10,14 @@ import data from '@/data/data.json'
 import { ref, computed } from 'vue'
 const props = defineProps({
   selectedLevel: String,
-  // default: 'easy',
 })
-// const selectedLevel = ref('easy')
 
 const showTextByLevel = computed(() => {
-  const list = data[props.selectedLevel]
+  const list = data[props.selectedLevel || 'easy']
   if (!list || list.length === 0) return null
 
   const randomIndex = Math.floor(Math.random() * list.length)
   return list[randomIndex]
 })
-console.log('show text by level----->', showTextByLevel.text)
 </script>
 <style scoped></style>

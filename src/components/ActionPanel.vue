@@ -28,15 +28,12 @@ const selectLevel = ref('easy')
 const btns = ref([
   {
     label: 'easy',
-    isActive: false,
   },
   {
     label: 'medium',
-    isActive: false,
   },
   {
     label: 'hard',
-    isActive: true,
   },
 ])
 const modes = ref([
