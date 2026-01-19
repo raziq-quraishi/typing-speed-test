@@ -18,12 +18,13 @@
         <span class="font-bold">{{ accuracy }}%</span>
       </p>
 
-      <p class="px-4">
+      <p class="px-4" v-if="mode === 'times'">
         <span class="text-sm text-[var(--neutral-400)]">Time</span>:
         <span class="font-bold" :class="{ 'text-[var(--yellow-400)]': isTyping }">
           0:{{ timeLeft }}
         </span>
       </p>
+      <p v-else class="text-sm text-[var(--neutral-400)]">Passage Mode</p>
     </section>
 
     <section class="flex items-center gap-4 divide-x divide-[var(--neutral-800)]">
@@ -43,14 +44,15 @@
         </button>
       </div>
       <div class="text-[var(--neutral-0)]">
-        <span class="text-sm text-[var(--neutral-400)]">Mode:</span>
+        <span class="text-sm mr-1 text-[var(--neutral-400)]">Mode:</span>
         <button
-          v-for="mode in modes"
-          :key="mode.label"
+          v-for="m in ['times', 'passage']"
+          :key="m"
           class="cursor-pointer border rounded-sm text-xs mr-2 text-[var(--neutral-0)] hover:text-[var(--blue-400)] hover:border-[var(--blue-400)] p-1"
-          :class="{ 'border-[var(--blue-600)] text-blue-500': mode.isActive }"
+          :class="{ 'border-[var(--blue-600)] text-blue-500': mode === m }"
+          @click="setMode(m)"
         >
-          {{ mode.label }}
+          {{ m }}
         </button>
       </div>
     </section>
@@ -115,7 +117,7 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 const router = useRouter()
 const resultStore = useResultStore()
 const btns = ref([{ label: 'easy' }, { label: 'medium' }, { label: 'hard' }])
-const modes = ref([{ label: 'times (60s)' }, { label: 'passage' }])
+const mode = ref('times')
 let showData = ref('')
 let charArr = ref([])
 let inputValue = ref('')
@@ -123,7 +125,7 @@ const activeBtn = ref('easy')
 let isTyping = ref(false)
 let hiddenInput = ref(null)
 let isBlurred = ref(true)
-
+let elapsedSeconds = ref(0)
 let timer = null
 let maxTime = ref(30)
 let timeLeft = ref(maxTime.value)
@@ -151,10 +153,15 @@ const accuracy = computed(() => {
 })
 
 const wpm = computed(() => {
-  const minutes = (maxTime.value - timeLeft.value) / 60
-  if (minutes === 0) return 0
+  const minutes = elapsedSeconds.value / 60
+  if (minutes <= 0) return 0
   return Math.round(correctChars.value / 5 / minutes)
 })
+
+const setMode = (m) => {
+  mode.value = m
+  restartTyping()
+}
 const focusInput = () => {
   hiddenInput.value.focus()
 }
@@ -166,6 +173,7 @@ const restartTyping = () => {
   inputValue.value = ''
   clearInterval(timer)
   timeLeft.value = maxTime.value
+  elapsedSeconds.value = 0
   isTyping.value = false
   isBlurred.value = true
   renderData()
@@ -177,7 +185,7 @@ const initTyping = () => {
   }
   let typedChars = inputValue.value.split('')
   if (typedChars.length === charArr.value.length) {
-    finishTyping()
+    checkFinish()
     return
   }
   if (timeLeft.value > 0) {
@@ -215,6 +223,15 @@ const renderData = (level = activeBtn.value) => {
   charArr.value[0].first = 'active'
 }
 
+const checkFinish = () => {
+  if (mode.value === 'times' && timeLeft.value === 0) {
+    finishTyping()
+  }
+
+  if (mode.value === 'passage' && inputValue.value.length === charArr.value.length) {
+    finishTyping()
+  }
+}
 const finishTyping = () => {
   let typing_info = {
     wpm: wpm.value,
@@ -232,10 +249,13 @@ const finishTyping = () => {
 }
 
 const initTimer = () => {
-  if (timeLeft.value > 0) {
-    timeLeft.value--
-  } else {
-    finishTyping()
+  elapsedSeconds.value++
+  if (mode.value === 'times') {
+    if (timeLeft.value > 0) {
+      timeLeft.value--
+    } else {
+      checkFinish()
+    }
   }
 }
 </script>
