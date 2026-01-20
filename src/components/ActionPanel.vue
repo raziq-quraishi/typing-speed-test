@@ -8,7 +8,7 @@
   ></textarea>
   <main class="flex items-center justify-between border-b pb-4 border-[var(--neutral-800)]">
     <section class="flex items-center text-[var(--neutral-0)] divide-x divide-[var(--neutral-800)]">
-      <p class="pr-4">
+      <p class="w-24 pr-4">
         <span class="text-sm text-[var(--neutral-400)]">WPM</span>:
         <span class="font-bold">{{ wpm }}</span>
       </p>
@@ -127,7 +127,7 @@ let hiddenInput = ref(null)
 let isBlurred = ref(true)
 let elapsedSeconds = ref(0)
 let timer = null
-let maxTime = ref(30)
+let maxTime = ref(60)
 let timeLeft = ref(maxTime.value)
 onBeforeUnmount(() => {
   document.removeEventListener('click', focusInput)
