@@ -224,11 +224,11 @@ const renderData = (level = activeBtn.value) => {
 }
 
 const checkFinish = () => {
-  if (mode.value === 'times' && timeLeft.value === 0) {
+  if (mode.value === 'times' || timeLeft.value === 0) {
     finishTyping()
   }
 
-  if (mode.value === 'passage' && inputValue.value.length === charArr.value.length) {
+  if (mode.value === 'passage' || inputValue.value.length === charArr.value.length) {
     finishTyping()
   }
 }
