@@ -41,32 +41,24 @@
       </p>
     </div>
     <div class="cards-container flex items-center justify-between gap-4">
-      <!-- Card 1 -->
-      <div class="card border border-[var(--neutral-800)] rounded-md p-2 w-[100px] text-center">
-        <p class="text-xs text-[var(--neutral-400)]">WPM</p>
-        <p class="font-bold">{{ resultStore.wpm }}</p>
-      </div>
-      <!-- Card 2 -->
-      <div class="card border border-[var(--neutral-800)] rounded-md p-2 w-[100px] text-center">
-        <p class="text-xs text-[var(--neutral-400)]">Accuracy</p>
-        <p
-          class="font-bold"
-          :class="{
-            'text-[var(--red-500)]': resultStore.accuracy < 100,
-            'text-[var(--green-500)]': resultStore.accuracy == 100,
-          }"
-        >
-          {{ resultStore.accuracy ?? 100 }}%
-        </p>
-      </div>
-      <!-- Card 3 -->
-      <div class="card border border-[var(--neutral-800)] rounded-md p-2 w-[100px] text-center">
-        <p class="text-xs text-[var(--neutral-400)]">Characters</p>
-        <p class="font-bold">
+      <!-- Card 1 WPM -->
+      <Card label="WPM" :value="resultStore.wpm" />
+      <!-- Card 2 Accuracy -->
+      <Card
+        label="Accuracy"
+        :value="resultStore.accuracy + '%'"
+        :class="{
+          'text-[var(--red-500)]': resultStore.accuracy < 100,
+          'text-[var(--green-500)]': resultStore.accuracy == 100,
+        }"
+      />
+      <!-- Card 3 Characters -->
+      <Card label="Characters">
+        <template #content>
           <span class="text-[var(--green-500)]">{{ resultStore.characters.correct ?? 100 }}</span> /
           <span class="text-[var(--red-500)]">{{ resultStore.characters.wrong ?? 0 }}</span>
-        </p>
-      </div>
+        </template>
+      </Card>
     </div>
     <button
       class="bg-white flex item-center justify-center gap-1 p-2 rounded text-center cursor-pointer"
@@ -101,6 +93,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { useResultStore } from '@/stores/resultStore.js'
+import Card from '@/components/Card.vue'
 
 import { computed, onMounted, ref } from 'vue'
 const router = useRouter()
