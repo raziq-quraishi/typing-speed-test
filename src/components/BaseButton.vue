@@ -3,10 +3,8 @@
     <button
       class="bg-white flex item-center justify-center gap-1 p-2 rounded text-center cursor-pointer"
     >
-      <span class="font-bold text-sm -mt-1 text-[var(--neutral-900)]" v-if="isFirstRun"
-        >Beat This Score
-      </span>
-      <span class="font-bold text-sm -mt-1 text-[var(--neutral-900)]" v-else>Go Again </span>
+      <span class="font-bold text-sm -mt-1 text-[var(--neutral-900)]">Beat This Score </span>
+      <span class="font-bold text-sm -mt-1 text-[var(--neutral-900)]">Go Again </span>
       <span
         ><svg
           xmlns="http://www.w3.org/2000/svg"
