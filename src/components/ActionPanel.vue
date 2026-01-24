@@ -7,23 +7,20 @@
     ref="hiddenInput"
   ></textarea>
   <main class="flex items-center justify-between border-b pb-4 border-[var(--neutral-800)]">
-    <section class="flex items-center text-[var(--neutral-0)] divide-x divide-[var(--neutral-800)]">
-      <p class="w-24 pr-4">
-        <span class="text-sm text-[var(--neutral-400)]">WPM</span>:
-        <span class="font-bold">{{ wpm }}</span>
-      </p>
-
-      <p class="px-4">
-        <span class="text-sm text-[var(--neutral-400)]">Accuracy</span>:
-        <span class="font-bold">{{ accuracy }}%</span>
-      </p>
-
-      <p class="px-4" v-if="mode === 'times'">
-        <span class="text-sm text-[var(--neutral-400)]">Time</span>:
-        <span class="font-bold" :class="{ 'text-[var(--yellow-400)]': isTyping }">
-          0:{{ timeLeft }}
-        </span>
-      </p>
+    <section
+      class="flex gap-10 items-center text-[var(--neutral-0)] divide-x divide-[var(--neutral-800)]"
+    >
+      <!-- WPM -->
+      <Label label="WPM" :value="wpm" />
+      <!-- Accuracy -->
+      <Label label="Accuracy" :value="accuracy + '%'" />
+      <!-- Time -->
+      <Label
+        label="Time"
+        :value="'0:' + timeLeft"
+        :class="{ 'text-[var(--yellow-400)]': isTyping }"
+        v-if="mode === 'times'"
+      />
       <p v-else class="text-sm text-[var(--neutral-400)]">Passage Mode</p>
     </section>
 
@@ -86,33 +83,37 @@
     >
   </section>
   <section class="flex items-center justify-center mt-4">
-    <button
-      class="bg-[var(--neutral-800)] flex items-center justify-center rounded-sm text-[var(--neutral-0)] p-2 gap-2 text-sm font-semibold"
+    <BaseButton
+      @click-event="restartTyping"
       v-if="!isBlurred"
-      @click="restartTyping"
+      class="bg-[var(--neutral-800)] text-[var(--neutral-0)] rounded-sm"
     >
-      <span>Restart Test</span>
-      <span
-        ><svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="14"
-          height="14"
-          fill="none"
-          viewBox="0 0 20 20"
-          class=""
-        >
-          <path
-            fill="#fff"
-            d="M1.563 1.281h.949c.246 0 .422.211.422.457l-.07 3.446a8.6 8.6 0 0 1 7.277-3.868c4.816 0 8.718 3.938 8.718 8.72-.035 4.816-3.937 8.683-8.718 8.683a8.86 8.86 0 0 1-5.871-2.215.446.446 0 0 1 0-.633l.703-.703c.14-.14.386-.14.562 0 1.23 1.09 2.813 1.723 4.606 1.723A6.88 6.88 0 0 0 17.03 10c0-3.797-3.093-6.89-6.89-6.89-2.813 0-5.203 1.687-6.293 4.078l4.43-.106c.245 0 .456.176.456.422v.95c0 .245-.21.421-.421.421h-6.75a.406.406 0 0 1-.422-.422v-6.75c0-.21.175-.422.422-.422"
-          /></svg
-      ></span>
-    </button>
+      <template #btn-content>
+        <span>Restart Test</span>
+        <span
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            fill="none"
+            viewBox="0 0 20 20"
+            class=""
+          >
+            <path
+              fill="#fff"
+              d="M1.563 1.281h.949c.246 0 .422.211.422.457l-.07 3.446a8.6 8.6 0 0 1 7.277-3.868c4.816 0 8.718 3.938 8.718 8.72-.035 4.816-3.937 8.683-8.718 8.683a8.86 8.86 0 0 1-5.871-2.215.446.446 0 0 1 0-.633l.703-.703c.14-.14.386-.14.562 0 1.23 1.09 2.813 1.723 4.606 1.723A6.88 6.88 0 0 0 17.03 10c0-3.797-3.093-6.89-6.89-6.89-2.813 0-5.203 1.687-6.293 4.078l4.43-.106c.245 0 .456.176.456.422v.95c0 .245-.21.421-.421.421h-6.75a.406.406 0 0 1-.422-.422v-6.75c0-.21.175-.422.422-.422"
+            /></svg
+        ></span>
+      </template>
+    </BaseButton>
   </section>
 </template>
 <script setup>
 import { useRouter } from 'vue-router'
 import { useResultStore } from '@/stores/resultStore.js'
 import data from '@/data/data.json'
+import BaseButton from './BaseButton.vue'
+import Label from '@/components/Label.vue'
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 const router = useRouter()
 const resultStore = useResultStore()
@@ -157,7 +158,9 @@ const wpm = computed(() => {
   if (minutes <= 0) return 0
   return Math.round(correctChars.value / 5 / minutes)
 })
-
+const clickEvent = () => {
+  console.log('Button Clicked')
+}
 const setMode = (m) => {
   mode.value = m
   restartTyping()
